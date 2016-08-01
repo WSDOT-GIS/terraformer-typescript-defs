@@ -1,0 +1,17 @@
+{
+  "name": "terraformer-typescript",
+  "version": "1.0.0",
+  "description": "Helper for using terraformer from within typescript",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "license": "unlicense",
+  "dependencies": {
+    "terraformer": "^1.0.5",
+    "terraformer-arcgis-parser": "^1.0.4",
+    "terraformer-wkt-parser": "^1.1.0"
+  }
+}
