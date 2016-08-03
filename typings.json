@@ -1,5 +1,11 @@
 {
   "name": "terraformer-typescript",
+  "files": [
+    "terraformer.d.ts",
+    "terraformer-arcgis-parser.d.ts",
+    "terraformer-geostore-d.ts",
+    "terraformer-wkt-parser.d.ts"
+  ],
   "dependencies": {},
   "globalDependencies": {
     "geojson": "registry:dt/geojson#0.0.0+20160619034323",
