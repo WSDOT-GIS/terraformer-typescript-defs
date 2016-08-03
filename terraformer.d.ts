@@ -1,3 +1,4 @@
+
 declare module "terraformer" {
     interface Envelope {
         x: number,
@@ -12,7 +13,9 @@ declare module "terraformer" {
     type Coordinates = GeoJSON.Position[];
     type TerraformerGeometry = Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon;
 
-    abstract class Primitive {
+    class Primitive<T extends GeoJSON.GeoJsonObject> implements GeoJSON.GeoJsonObject {
+        constructor(geojson:T);
+        type: string;
         toMercator(): this;
         toGeographic(): this;
         envelope(): Envelope;
@@ -23,15 +26,15 @@ declare module "terraformer" {
         intersects(geometry:GeoJSON.GeometryObject):boolean;
     }
 
-    class Point extends Primitive implements GeoJSON.Point  {
-        constructor(p:GeoJSON.Point)
-        constructor(x:number, y:number)
-        constructor(xy:GeoJSON.Position)
-        type: "Point"
-        coordinates: GeoJSON.Position
+    class Point extends Primitive<GeoJSON.Point> implements GeoJSON.Point  {
+        constructor(p:GeoJSON.Point);
+        constructor(x:number, y:number);
+        constructor(xy:GeoJSON.Position);
+        type: "Point";
+        coordinates: GeoJSON.Position;
     }
 
-    class MultiPoint extends Primitive implements GeoJSON.MultiPoint {
+    class MultiPoint extends Primitive<GeoJSON.MultiPoint> implements GeoJSON.MultiPoint {
         constructor(geojsonMP:GeoJSON.MultiPoint);
         constructor(coordinates:Coordinates);
         type: "MultiPoint";
@@ -44,7 +47,7 @@ declare module "terraformer" {
         removePoint(coordinate:Coordinate):this;
     }
 
-    class LineString extends Primitive implements GeoJSON.LineString {
+    class LineString extends Primitive<GeoJSON.LineString> implements GeoJSON.LineString {
         constructor(geoJson:GeoJSON.LineString);
         constructor(coordinates:Coordinates);
         type: "LineString";
@@ -54,7 +57,7 @@ declare module "terraformer" {
         removeVertex(index:number):this;
     }
 
-    class MultiLineString extends Primitive implements GeoJSON.MultiLineString {
+    class MultiLineString extends Primitive<GeoJSON.MultiLineString> implements GeoJSON.MultiLineString {
         constructor(geoJson:GeoJSON.MultiLineString);
         constructor(coordinates:Coordinates[]);
         type: "MultiLineString";
@@ -63,7 +66,7 @@ declare module "terraformer" {
         get(index:number):LineString
     }
 
-    class Polygon extends Primitive implements GeoJSON.Polygon {
+    class Polygon extends Primitive<GeoJSON.Polygon> implements GeoJSON.Polygon {
         constructor(geoJson: GeoJSON.Polygon);
         constructor(coordinates: Coordinates[])
         type: "Polygon";
@@ -76,8 +79,15 @@ declare module "terraformer" {
         holes():Polygon[]
     }
 
-    class MultiPolygon extends Primitive implements GeoJSON.MultiPolygon {
+    class MultiPolygon extends Primitive<GeoJSON.MultiPolygon> implements GeoJSON.MultiPolygon {
+        constructor(geoJson:GeoJSON.Polygon);
         constructor(geoJson:GeoJSON.MultiPolygon);
+        // // Valid, according to http://terraformer.io/core/#constructor-6
+        // constructor(geoJson:{
+        //     type: "MultiPolygon",
+        //     coordinates: number[][][]
+        // });
+        constructor(coordinates:Coordinates[]);
         constructor(coordinates:Coordinates[][]);
         type: "MultiPolygon";
         coordinates: Coordinates[][];
@@ -85,15 +95,15 @@ declare module "terraformer" {
         get(index:number):Polygon
     }
 
-    abstract class Feature<T extends GeoJSON.GeometryObject> implements GeoJSON.Feature<GeoJSON.GeometryObject> {
+    class Feature<T extends GeoJSON.GeometryObject> implements GeoJSON.Feature<T> {
         type: "Feature";
         geometry: T
         properties: any;
-        constructor(geoJson:GeoJSON.Feature<GeoJSON.GeometryObject>);
-        constructor(geometry:GeoJSON.GeometryObject);
+        constructor(geometry:T);
+        constructor(geoJson:GeoJSON.Feature<T>);
     }
 
-    class FeatureCollection<T extends GeoJSON.GeometryObject> implements GeoJSON.FeatureCollection<GeoJSON.GeometryObject> {
+    class FeatureCollection<T extends GeoJSON.GeometryObject> implements GeoJSON.FeatureCollection<T> {
         type: "FeatureCollection";
         features: GeoJSON.Feature<T>[];
         constructor(geoJson:GeoJSON.FeatureCollection<T>);
@@ -106,12 +116,13 @@ declare module "terraformer" {
         type: "GeometryCollection";
         geometries: GeoJSON.GeometryObject[];
         constructor(geoJson:GeoJSON.GeometryCollection);
+        constructor(geoJson:GeoJSON.FeatureCollection<GeoJSON.GeometryObject>);
         constructor(features:GeoJSON.GeometryObject[]);
         forEach(f:Function)
-        get(index:number):Primitive
+        get(index:number):Primitive<GeoJSON.GeometryObject>
     }
 
-    class Circle extends Primitive implements GeoJSON.Feature<GeoJSON.Polygon> {
+    class Circle extends Primitive<GeoJSON.Feature<GeoJSON.Polygon>> implements GeoJSON.Feature<GeoJSON.Polygon> {
         type: "Feature";
         geometry: GeoJSON.Polygon;
         properties: any;
@@ -141,6 +152,7 @@ declare module "terraformer" {
 
         static coordinatesContainPoint(coordinates:Coordinates[], coordinate:Coordinate): Boolean;
         static polygonContainsPoint(polygon:GeoJSON.Polygon, coordinate:Coordinate): Boolean;
+        static polygonContainsPoint(polygon:GeoJSON.Position[][], coordinate:Coordinate): Boolean;
         static arrayIntersectsArray(c1:Coordinates[], c2:Coordinates[]): Boolean;
         static coordinatesEqual(c1:Coordinate, c2:Coordinate): Boolean;
     }

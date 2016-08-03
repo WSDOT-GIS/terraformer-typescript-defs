@@ -2,6 +2,7 @@
   "name": "terraformer-typescript",
   "dependencies": {},
   "globalDependencies": {
-    "geojson": "registry:dt/geojson#0.0.0+20160619034323"
+    "geojson": "registry:dt/geojson#0.0.0+20160619034323",
+    "node": "registry:env/node#6.0.0+20160723033700"
   }
 }
