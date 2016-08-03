@@ -90,6 +90,10 @@ declare module "terraformer-arcgis-parser" {
     interface ConvertOptions {
         idAttribute?: string;
     }
-    function parse(json: ArcGIS.Geometry | ArcGIS.Feature, options?: ParseOptions): GeoJSON.GeoJsonObject;
-    function convert(geoJSON: GeoJSON.GeoJsonObject, options?: ConvertOptions): ArcGIS.FeatureSet | ArcGIS.Feature | ArcGIS.Geometry
+    function parse<T extends ArcGIS.Geometry> (json: T, options?: ParseOptions): GeoJSON.GeometryObject;
+    function parse<T extends GeoJSON.GeometryObject>(json: ArcGIS.Feature, options?: ParseOptions): GeoJSON.Feature<T>;
+
+    function convert<T extends GeoJSON.GeometryObject>(geoJSON: GeoJSON.FeatureCollection<T>, options?: ConvertOptions): ArcGIS.FeatureSet
+    function convert<T extends GeoJSON.GeometryObject>(geoJSON: GeoJSON.Feature<T>, options?: ConvertOptions): ArcGIS.Feature
+    function convert<T extends GeoJSON.GeometryObject>(geoJSON: T, options?: ConvertOptions): ArcGIS.Geometry
 }
