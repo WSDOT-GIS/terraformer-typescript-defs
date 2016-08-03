@@ -3,7 +3,7 @@
   "files": [
     "terraformer.d.ts",
     "terraformer-arcgis-parser.d.ts",
-    "terraformer-geostore-d.ts",
+    "terraformer-geostore.d.ts",
     "terraformer-wkt-parser.d.ts"
   ],
   "dependencies": {},
