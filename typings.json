@@ -10,6 +10,7 @@
   ],
   "dependencies": {},
   "globalDependencies": {
+    "arcgis-rest-api": "github:WSDOT-GIS/arcgis-rest-api-typescript#1181a2cabb66f6a36c0f7bcfaecee2f906f8c3fb",
     "geojson": "registry:dt/geojson#0.0.0+20160619034323",
     "node": "registry:env/node#6.0.0+20160723033700"
   }
