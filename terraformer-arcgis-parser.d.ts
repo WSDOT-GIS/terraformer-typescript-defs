@@ -18,4 +18,6 @@ declare namespace Terraformer {
 
 }
 
-export = Terraformer.ArcGIS;
+declare module "terraformer-arcgis-parser" {
+    export = Terraformer.ArcGIS;
+}

@@ -155,4 +155,8 @@ declare namespace Terraformer {
     }
 }
 
-export = Terraformer;
+declare module "terraformer" {
+    export = Terraformer
+}
+
+// export = Terraformer;

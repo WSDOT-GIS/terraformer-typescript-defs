@@ -5,4 +5,6 @@ declare namespace Terraformer {
     }
 }
 
-export = Terraformer.WKT;
+declare module "terraformer-wkt-parser" {
+    export = Terraformer.WKT;
+}
